@@ -1,23 +1,26 @@
 # supervisely-test
 
+**Весь код выложен в этот репозиторий. В каждой директории есть код и результаты к соответствующей задаче. Задача с ClickSEG имеет [свой репозиторий](https://github.com/max-unfinity/ClickSEG-cracks) с кодом.**
+
 ## 1. ClickSEG on Cracks
 
-Для этой задачи я сделал отдельный репозиторий, т.к. было много изменений в коде ClickSEG. Все подбробности обучения там: https://github.com/max-unfinity/ClickSEG-cracks
-Датасет трещин на kaggle: https://www.kaggle.com/datasets/lakshaymiddha/crack-segmentation-dataset
-Обычно, модели нужно 1-3 клика для хороших результатов. Многие трещины хорошо предсказываются и в один клик.
+Датасет трещин взят с kaggle: https://www.kaggle.com/datasets/lakshaymiddha/crack-segmentation-dataset
+
+В среднем, модели нужно 1-3 клика для хороших результатов. Многие трещины хорошо предсказываются и в один клик.
 
 ![](1_clickseg/results/fig.png)
 
 ![](1_clickseg/results/34.png)
 
+Для этой задачи я сделал отдельный репозиторий, т.к. было много изменений в коде ClickSEG. Все подбробности обучения и метрики есть там: https://github.com/max-unfinity/ClickSEG-cracks *(там я писал ридми на английском.. так вышло)))*
 
 ## 2. Split and Merge
 
-dependencies: numpy, opencv-python
+`dependencies: numpy, opencv-python`
 
-Особенности:
+### Особенности:
 **border mode.**
-Метод split реализован 3-мя вариантами, разница в том как будут обрабатываться границы изображения:
+Метод **split** реализован 3-мя вариантами, разница в том как будут обрабатываться границы изображения:
 - обрезка на границе (padding=False)
 - padding
 - padding_all_sides (картинка будет в центре, а паддинг по краям).
@@ -49,7 +52,7 @@ dependencies: numpy, opencv-python
 
 ## 4. Making Video Grid
 
-Здесь нужен только ffmpeg с его -filter_complex и overlay. Скрипт работает на любом наборе видео клипов. То есть они могут быть разных разрешений, ориентаций и длительности. Каждому будет сделан паддинг, а длительность выбирается по самому короткому клипу. Вся мощь ffmpeg внутри))
+Здесь нужен только `ffmpeg` с его `-filter_complex` и `overlay`. Скрипт работает на любом наборе видео клипов. То есть они могут быть разных разрешений, ориентаций и длительности. Каждому будет сделан паддинг, а длительность выбирается по самому короткому клипу. Вся мощь ffmpeg внутри))
 
 `python make_grid.py sample_data2 --width 1920 --height 1080 --output result.mp4`
 
@@ -58,7 +61,7 @@ dependencies: numpy, opencv-python
 
 ## 5. SegNeXt on 6 Lemons
 
-Всего 6 сэмплов для обучения. mmsegmentation очень удобен и запускается на раз-два. Нужно всего лишь сделать правильный конфиг. Я взял tiny модель, обученную на ADE датасете, добавил сильные аугментации (RandomMosaic, RandomRotate, RandomFlip, RandomCrop). Модель показывает неплохие результаты на тесте (визуально). Можно сравнить модели со слабыми и сильными аугментациями (обе модели учились до схождения):
+Всего 6 сэмплов для обучения. `mmsegmentation` очень удобен и запускается на раз-два. Нужно всего лишь сделать правильный конфиг. Я взял tiny модель, обученную на ADE датасете, добавил сильные аугментации (RandomMosaic, RandomRotate, RandomFlip, RandomCrop). Модель показывает неплохие результаты на тесте (визуально). Можно сравнить модели со слабыми и сильными аугментациями (обе модели учились до схождения):
 
 ### Light augmentations (450 iters):
 
@@ -86,9 +89,9 @@ https://drive.google.com/drive/folders/1rmccjEZ_ckx0wNQe7viflY8FNvnr1o-8?usp=sha
 - download [yolov7 weights](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt)
 - run main.py
 
-```cd 6_yolov7_youtube_detector
+```cd 6_yolov7_youtube_detector```
 
-python main.py https://www.youtube.com/watch?v=b41k2_MQNBk --n_frames 50 --fps 1.0 --device cpu --weights yolov7.pt```
+```python main.py https://www.youtube.com/watch?v=b41k2_MQNBk --n_frames 50 --fps 1.0 --device cpu --weights yolov7.pt```
 
 ### Results:
 ![](6_yolov7_youtube_detector/predicts/b41k2_MQNBk/img01.jpg)
