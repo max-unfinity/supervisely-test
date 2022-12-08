@@ -1,0 +1,47 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [2.7, 3.6, 3.7, 3.8, 3.9]
+    env:
+      MPLBACKEND: agg
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: true
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install
+      run: |
+        if [ "${{ matrix.python-version }}" == "2.7" ]; then
+          pip install 'pip<19'
+        fi
+        pip install .[all]
+    - name: Test
+      run: |
+        pip install pytest
+        pytest -vsx tests
+    - name: Run examples
+      run: |
+        python getting_started.py
+        for f in examples/*.py; do
+          if [ -x $f ]; then
+            $f
+          fi
+        done
+    - name: Install from dist
+      run: |
+        python setup.py sdist
+        pip install dist/*.tar.gz

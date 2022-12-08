@@ -1,0 +1,10 @@
+# Python
+__pycache__/
+*.pyc
+/dist/
+/src/
+/*.egg-info/
+/.mypy_cache/
+
+# Sphinx
+/docs/build/
